@@ -1,0 +1,165 @@
+---
+title: "Micro Project"
+author: "XXX"
+date: "09/02/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r l1, fig.height=4, fig.width=4}
+# clear workspace
+rm(list = ls())
+
+# load needed libraries
+library(readr)
+library(pscl)
+library(car)
+library(pROC)
+
+# read dataset
+data <- read_csv("C:/Users/samue/Downloads/Studium/Economics (Master - Vienna)/1. Semester/Microeconometrics/Project/Overview.csv")
+
+# check if import worked
+head(data)
+head(data$ELITE_NAME)
+table(data$ELITE_EXITFATE)
+table(data$ELITE_EXITTYPE)
+
+# attach data
+attach(data)
+
+# create dummy for death during regime or at end
+dim(data); n <- dim(data)[1]
+death1 <- rep(1,n) 
+
+# dummy for first type of death
+for(i in 1:n){
+  death1[i] <- ifelse(ELITE_EXITTYPE[i] != 'Demotion' && ELITE_EXITTYPE[i] != 'Expulsion'
+                  && ELITE_EXITTYPE[i] != 'Death- natural'
+                  && ELITE_EXITTYPE[i] != 'Regime Change'
+                  && ELITE_EXITTYPE[i] != 'Resignation',1,0)}
+table(death1)
+
+# dummy for second type of death
+death2 <- rep(1,n)
+for(i in 1:n){
+  death2[i] <- ifelse(ELITE_EXITFATE[i] == 'Execution',1,0)
+}
+table(death2)
+
+# merge dummies
+a <- which(death2==1)
+b <- which(death1==1)
+c <- c(a,b)
+death <- rep(0,n)
+death[c] <- 1
+table(death)
+
+# dummy for country being in europe
+EUROPE <- rep(0,n)
+for(i in 1:n){
+  EUROPE[i] <- ifelse(STATE[i] == 'Germany' || STATE[i] == 'Poland'
+                   || STATE[i] == 'East Germany' || STATE[i] == 'Hungary'
+                   || STATE[i] == 'Norway' || STATE[i] == 'Romania'
+                   || STATE[i] == 'Soviet Union',1,0)
+}
+table(EUROPE)
+
+# dummy for military as occumpation outside of regime
+MIL <- rep(0,n)
+for(i in 1:n){
+  MIL[i] <- ifelse(ELITE_OCCUPATION[i] == 'Soldier' 
+                   || ELITE_OCCUPATION[i] == 'State Security'
+                   || ELITE_OCCUPATION[i] == 'Army officer'
+                   || ELITE_OCCUPATION[i] == 'Naval officer'
+                   || ELITE_OCCUPATION[i] == 'Military Police officer'
+                   || ELITE_OCCUPATION[i] == 'Police officer'
+                   || ELITE_OCCUPATION[i] == 'Air Force Officer'
+                   || ELITE_OCCUPATION[i] == 'Air Force officer',1,0)
+}
+table(MIL)
+
+# dummy for economists
+ECON <- rep(0,n)
+for(i in 1:n){
+  ECON[i] <- ifelse(ELITE_OCCUPATION[i] == 'Economist' 
+                    || ELITE_OCCUPATION[i] == 'economist',1,0)
+}
+table(ECON)
+
+# create function to extract date from string
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+
+# get regime end year
+END <- REG_END
+END <- substrRight(END, 4)
+END <- as.numeric(END)
+table(END)
+
+# get regime start year
+START <- as.numeric(substrRight(REG_START, 4))
+table(START)
+
+# take care of regimes that have not ended
+END <- ifelse(is.na(END),2020,END)
+table(END)
+
+# variable for regime duration
+DURATION <- END-START
+table(DURATION)
+
+# standardize regime start year
+mean(START)
+START <- START-mean(START)
+
+
+#View(data)
+
+# make data numeric for the model
+death <- as.numeric(death)
+ELITE_FEMALE <- as.numeric(ELITE_FEMALE)
+ELITE_ENTERAGE <- as.numeric(ELITE_ENTERAGE)
+ELITE_RETENURE <- as.numeric(ELITE_RETENURE)
+
+# create dataset only based on relevant variables
+data <- cbind(death,EUROPE,START,DURATION,ELITE_FEMALE,ELITE_ENTERAGE,ELITE_RETENURE,
+              EC_GR_2Y,MIL,ECON,END)
+data <- as.data.frame(data)
+
+# remove NAs
+data <- na.exclude(data)
+
+
+#View(data)
+
+
+# logit model
+model1 <- glm(death ~ EUROPE+START+DURATION+ELITE_FEMALE+ELITE_ENTERAGE+ELITE_RETENURE
+              +EC_GR_2Y+ECON+MIL,
+    family = binomial(link = 'logit'), data=data)
+summary(model1)
+
+# pseudo R2s
+pR2(model1)
+
+# variance inflation factors
+vif(model1)
+
+# cor(data) shows correlations across all variables
+cor(EUROPE,START)
+
+# model without START
+model2 <- glm(death ~ EUROPE+DURATION+ELITE_FEMALE+ELITE_ENTERAGE+ELITE_RETENURE
+              +EC_GR_2Y+ECON+MIL+END,
+    family = binomial(link = 'logit'), data = data)
+summary(model2)
+pR2(model2)
+
+roc(data$death,predict.glm(model2,type='response'),plot=TRUE)
+
+vif(model2)
+```
