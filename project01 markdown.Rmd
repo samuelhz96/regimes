@@ -27,8 +27,6 @@ head(data$ELITE_NAME)
 table(data$ELITE_EXITFATE)
 table(data$ELITE_EXITTYPE)
 
-# attach data
-attach(data)
 
 # create dummy for death during regime or at end
 dim(data); n <- dim(data)[1]
@@ -36,16 +34,17 @@ death1 <- rep(1,n)
 
 # dummy for first type of death
 for(i in 1:n){
-  death1[i] <- ifelse(ELITE_EXITTYPE[i] != 'Demotion' && ELITE_EXITTYPE[i] != 'Expulsion'
-                  && ELITE_EXITTYPE[i] != 'Death- natural'
-                  && ELITE_EXITTYPE[i] != 'Regime Change'
-                  && ELITE_EXITTYPE[i] != 'Resignation',1,0)}
+  death1[i] <- ifelse(data$ELITE_EXITTYPE[i] != 'Demotion' 
+                      && data$ELITE_EXITTYPE[i] != 'Expulsion'
+                      && data$ELITE_EXITTYPE[i] != 'Death- natural'
+                      && data$ELITE_EXITTYPE[i] != 'Regime Change'
+                      && data$ELITE_EXITTYPE[i] != 'Resignation',1,0)}
 table(death1)
 
 # dummy for second type of death
 death2 <- rep(1,n)
 for(i in 1:n){
-  death2[i] <- ifelse(ELITE_EXITFATE[i] == 'Execution',1,0)
+  death2[i] <- ifelse(data$ELITE_EXITFATE[i] == 'Execution',1,0)
 }
 table(death2)
 
@@ -60,32 +59,32 @@ table(death)
 # dummy for country being in europe
 EUROPE <- rep(0,n)
 for(i in 1:n){
-  EUROPE[i] <- ifelse(STATE[i] == 'Germany' || STATE[i] == 'Poland'
-                   || STATE[i] == 'East Germany' || STATE[i] == 'Hungary'
-                   || STATE[i] == 'Norway' || STATE[i] == 'Romania'
-                   || STATE[i] == 'Soviet Union',1,0)
+  EUROPE[i] <- ifelse(data$STATE[i] == 'Germany' || data$STATE[i] == 'Poland'
+                   || data$STATE[i] == 'East Germany' || data$STATE[i] == 'Hungary'
+                   || data$STATE[i] == 'Norway' || data$STATE[i] == 'Romania'
+                   || data$STATE[i] == 'Soviet Union',1,0)
 }
 table(EUROPE)
 
 # dummy for military as occumpation outside of regime
 MIL <- rep(0,n)
 for(i in 1:n){
-  MIL[i] <- ifelse(ELITE_OCCUPATION[i] == 'Soldier' 
-                   || ELITE_OCCUPATION[i] == 'State Security'
-                   || ELITE_OCCUPATION[i] == 'Army officer'
-                   || ELITE_OCCUPATION[i] == 'Naval officer'
-                   || ELITE_OCCUPATION[i] == 'Military Police officer'
-                   || ELITE_OCCUPATION[i] == 'Police officer'
-                   || ELITE_OCCUPATION[i] == 'Air Force Officer'
-                   || ELITE_OCCUPATION[i] == 'Air Force officer',1,0)
+  MIL[i] <- ifelse(data$ELITE_OCCUPATION[i] == 'Soldier' 
+                   || data$ELITE_OCCUPATION[i] == 'State Security'
+                   || data$ELITE_OCCUPATION[i] == 'Army officer'
+                   || data$ELITE_OCCUPATION[i] == 'Naval officer'
+                   || data$ELITE_OCCUPATION[i] == 'Military Police officer'
+                   || data$ELITE_OCCUPATION[i] == 'Police officer'
+                   || data$ELITE_OCCUPATION[i] == 'Air Force Officer'
+                   || data$ELITE_OCCUPATION[i] == 'Air Force officer',1,0)
 }
 table(MIL)
 
 # dummy for economists
 ECON <- rep(0,n)
 for(i in 1:n){
-  ECON[i] <- ifelse(ELITE_OCCUPATION[i] == 'Economist' 
-                    || ELITE_OCCUPATION[i] == 'economist',1,0)
+  ECON[i] <- ifelse(data$ELITE_OCCUPATION[i] == 'Economist' 
+                    || data$ELITE_OCCUPATION[i] == 'economist',1,0)
 }
 table(ECON)
 
@@ -95,13 +94,13 @@ substrRight <- function(x, n){
 }
 
 # get regime end year
-END <- REG_END
+END <- data$REG_END
 END <- substrRight(END, 4)
 END <- as.numeric(END)
 table(END)
 
 # get regime start year
-START <- as.numeric(substrRight(REG_START, 4))
+START <- as.numeric(substrRight(data$REG_START, 4))
 table(START)
 
 # take care of regimes that have not ended
@@ -116,22 +115,54 @@ table(DURATION)
 mean(START)
 START <- START-mean(START)
 
+mean(END)
+END <- END - mean(END)
 
 #View(data)
 
+
+
 # make data numeric for the model
 death <- as.numeric(death)
-ELITE_FEMALE <- as.numeric(ELITE_FEMALE)
-ELITE_ENTERAGE <- as.numeric(ELITE_ENTERAGE)
-ELITE_RETENURE <- as.numeric(ELITE_RETENURE)
+ELITE_FEMALE <- as.numeric(data$ELITE_FEMALE)
+ELITE_ENTERAGE <- as.numeric(data$ELITE_ENTERAGE)
+ELITE_RETENURE <- as.numeric(data$ELITE_RETENURE)
+EC_GR_2Y <- as.numeric(data$EC_GR_2Y)
 
 # create dataset only based on relevant variables
+data0 <- cbind(data$ELITE_NAME,death,EUROPE,START,DURATION,ELITE_FEMALE,ELITE_ENTERAGE,ELITE_RETENURE,
+              EC_GR_2Y,ECON,MIL,END)
 data <- cbind(death,EUROPE,START,DURATION,ELITE_FEMALE,ELITE_ENTERAGE,ELITE_RETENURE,
-              EC_GR_2Y,MIL,ECON,END)
+              EC_GR_2Y,ECON,MIL,END)
+
+# get vectors for specific people:
+hitler <- c(1,data[21,-c(1,3)])
+# check if person is correct
+data0[21,8] == data[21,7]
+
+goebbles <- c(1,data[13,-c(1,3)])
+
+# check dimenstion for later calculations
+length(hitler)
+t(rep(1,length(hitler)))%*%hitler
+
+
+
 data <- as.data.frame(data)
+data0 <- as.data.frame(data0)
+data0 <- na.exclude(data0)
+#View(data0)
+
+
+
+
+
+
 
 # remove NAs
 data <- na.exclude(data)
+
+
 
 
 #View(data)
@@ -162,4 +193,31 @@ pR2(model2)
 roc(data$death,predict.glm(model2,type='response'),plot=TRUE)
 
 vif(model2)
+
+# get hit rate of the model with a 0.5 cutoff
+cutoff <- 0.5
+# get predicted probabilities
+latent_pred <- predict.glm(model2,type = 'response')
+# get binary result from the cutoff
+latent_bin <- ifelse(latent_pred >= cutoff,1,0)
+# hitrate 
+mean(latent_bin==data$death)
+# percentage by just guessing more likely outcome
+1-mean(data$death)
+
+
+# check coefficients
+length(model2$coefficients);length(hitler)
+# check vectors for matching variables
+hitler
+model2$coefficients
+# get probabilities
+Pr_hitler <- 1/(1+exp(-t(model2$coefficients)%*%(hitler)))
+Pr_hitler
+Pr_goebbles <- 1/(1+exp(-t(model2$coefficients)%*%(goebbles)))
+Pr_goebbles
+# verify that the model would predict wrongly
+latent_bin[21]==data$death[21]
+latent_bin[13]==data$death[13]
 ```
+Get the predicted probabilities for Ghadaffi, Hitler, Mussolini, Goebbels, someone from SE Asia (no external war), Stalin (communist).
