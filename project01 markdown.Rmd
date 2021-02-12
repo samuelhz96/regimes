@@ -3,6 +3,8 @@ title: "From Cambodia to the Soviet Union: What Factors Influence the Probabilit
 author: "Katrin Aug, Leonhard Gruber, Samuel Hashem Zehi, Michaela Preclikova, Dominik Ruso"
 date: "12/02/2021"
 output: pdf_document
+bibliography: bibs.bib
+nocite: '@*'
 ---
 
 ```{r setup, include=FALSE}
@@ -70,9 +72,6 @@ None of the coefficients exhibit a VIF value that seems to lead to any larger co
 
 (whoever)
 
-# References
-
-(todo)
 \newpage
 
 # Project Code
@@ -286,5 +285,9 @@ Pr_goebbles
 # verify that the model would predict wrongly
 latent_bin[21]==data$death[21]
 latent_bin[13]==data$death[13]
+# Get the predicted probabilities for Hitler, Goebbels, someone from 
+# SE Asia (no external war), Stalin (communist).
 ```
-Get the predicted probabilities for Ghadaffi, Hitler, Mussolini, Goebbels, someone from SE Asia (no external war), Stalin (communist).
+
+
+# References
