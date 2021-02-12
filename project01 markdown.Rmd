@@ -61,6 +61,7 @@ McFadden R$^2$ & 0.091 & & \\
   \begin{itemize}
     \item insignificant coefficient on economists due to only 3\% of the sample being economists, and approx.\ 10\% are military members. Economists appear to have a \emph{clearer} effect compared to military, but still neither effect is significant
     \item 2Y growth, tenure, regime end (deviation from the mean end-year) seem like the largest drivers, all three have larger variations (not binary variables)
+    \item for the presentation: significance can be checked approximately by $coefficient / standard\ error \geq 2$, maybe some finance guys don't know that and I don't include stars for the significance level
     \item $\mathbb P\text{r}(\text{death}_{Hitler} = 1 \mid \mathbf x_{Hitler})=11.76\%$, so if we observe an infinite amount of Hitlers across identical universes, then only 11.76\% of them would be predicted to die during/at the end of their regimes (maybe keep this part for the presentation rather than the handout)
     \item $\mathbb P\text{r}(\text{death}_{Goebbles} = 1 \mid \mathbf x_{Goebbles})=10.86\%$
     \item still need to find 2-3 suitable candidates for calculating the predicted probabilites (maybe Pol Pot?)
