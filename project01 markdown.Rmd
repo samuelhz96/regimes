@@ -70,7 +70,7 @@ McFadden R$^2$ & 0.091 & & \\
 
 # Model Diagnostics and Issues
 
-Correlation between the variables leads to inflated standard errors on the respective coefficients, this multiplicative term on the standard errors is the VIF, where the standard errors are now defined by
+Correlation between the variables leads to inflated standard errors on the respective coefficients, this multiplicative term on the standard errors is the VIF, where the variances are now defined by
   \begin{align*}
   \sigma^2_{\hat{\beta}_i} = n^{-1} \left[ \frac{1}{1-\rho^2_{\mathbf X_i,\mathbf X_j}} \right] \frac{\sigma_{\epsilon}^2}{\sigma_{\mathbf X_i}^2}.
   \end{align*}
