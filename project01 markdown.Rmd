@@ -33,7 +33,7 @@ In this section, we give a short overview on how the model was constructed, as w
  Europe Dummy & $-$1.060 &  Regime Duration & $-$0.002 \\ 
   & (0.575) &   & (0.012) \\ 
   & \\ 
- Female Dummy & $-$15.560 &  Age at Regime Start & 0.010 \\ 
+ Female Dummy & $-$15.560 &  Age at Regime Entrance & 0.010 \\ 
   & (723.003) &   & (0.014) \\  
   & \\ 
  Tenure in Regime & 0.035 &  2Y GDP Growth$^1$ & $-$0.206 \\
