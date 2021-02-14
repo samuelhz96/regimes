@@ -2,7 +2,11 @@
 title: "From Cambodia to the Soviet Union: What Factors Influence the Probability of Death for Members of Authoritarian Regimes?"
 author: "Katrin Aug, Leonhard Gruber, Samuel Hashem Zehi, Michaela Preclikova, Dominik Ruso"
 date: "12/02/2021"
-output: pdf_document
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 1
+    number_sections: true
 bibliography: bibs.bib
 nocite: '@*'
 ---
@@ -10,16 +14,13 @@ nocite: '@*'
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-# Introduction
-
+\newpage
+\section{Introduction}
 (Leo)
-
-# Model Specification
-
+\section{Model Specification}
 In this section, we give a short overview on how the model was constructed, as well as brief justifications as to why some variables are included. The variable selection is based on variables of interest, rather than trying to maximize the predictive power of the model. The dummy for the country in which the regime is, or was, located. There might be cultural reasons why countries in Latin America or Asia might differ from countries in Europe. Furthermore, the duration of the regime is included, as it might be the case that regimes that have been in power for longer have an increasing effect on the probability of death for its members, simply due to being longer in power giving more chances to die, either natural or not. Related to this, the demeaned end year of the regime is included, as the possibility of time trends seems plausible. E.g.\ when regimes were overturned 100 years ago, the population might have been less averse to peaceful transitions. An earlier version of this model included the start year, however, the variance inflation factor (VIF) on the coefficient was relatively large, compared to the others, so it was excluded from the model. End-of-regime two-year average GDP growth is included, as a worse economic situation might lead to a more desperate population, which in turn might lead to increased propensity of a more violent approach to overturning the current regime. Lastly, all other variables are included simply out of interest, not due to an assumption on the sign and size of the partial correlations with the outcome variable. 
 
-# Results and Interpretation
-
+\section{Results and Interpretation}
 (Michaela)
   \begin{itemize}
     \item insignificant coefficient on economists due to only 3\% of the sample being economists, and approx.\ 10\% are military members. Economists appear to have a \emph{clearer} effect compared to military, but still neither effect is significant
@@ -33,18 +34,14 @@ In this section, we give a short overview on how the model was constructed, as w
     \item still need to find 2-3 suitable candidates for calculating the predicted probabilites (maybe Pol Pot?)
   \end{itemize}
 (Katrin and Dominik)
-
-# Model Diagnostics and Issues
-
+\section{Model Diagnostics and Issues}
 None of the coefficients exhibit a VIF value that seems to lead to any larger concerns, using a critical value of 10 on the determination for problematic imperfect multicollinearity. Some of the standards appear quite large, this is, at least partly, due to the VIFs, as indicated in Table 2 of Appendix A. As is denoted in Table 1, the McFadden R$^2$ is 0.091, so the model appears to have some explanatory power. To put this in further context, the hit-rate of the model, using a cutoff value of 0.5, is 88.07\%, compared to a hit-rate of 87.66\% when simply guessing the most likely outcome of not dying. One issue with such a model is, per definition, that external validity is not given, as we pre-select for being part of an authoritarian regime. Furthermore, the inclusion of variables specific for the regime, such as the duration, don't allow for out-of-sample validation methods, only allowing for validation and calibration based on random sub-samples of this particular dataset. 
+\section{Conclusion}
 
-# Conclusion
-
-The model cannot capture a lot of the country-specific and time-specific factors which drive the unobserved dependent variable, at least given the data available. Thus, we are somewhat limited in the conclusions we are able to draw from this model. However, within this model, the first of three main drivers of the variation of the death probability, the economic growth rates immediately before the regime falls, which negatively influences the unobserved outcome variable. Secondly, the year in which the regime fell, which has a positive sign on the coefficient, and lastly the tenure of the individual member in their respective regime, which also has a positive coefficient.
+The model cannot capture a lot of the country-specific and time-specific factors which drive the unobserved dependent variable, at least given the data available. Thus, we are somewhat limited in the conclusions we are able to draw from this model. However, within this model, the first of four main drivers of the variation of the death probability, the economic growth rates immediately before the regime falls, which negatively influences the unobserved outcome variable. Secondly, the year in which the regime fell, which has a positive sign on the coefficient, additionally, the tenure of the individual member in their respective regime, which also has a positive coefficient. Lastly, female members of totalitarian regimes would have a significantly smaller probability of death, compared to their c.p.\ male counterparts.
 \newpage
-
-# Appendix A: Tables
-
+\section*{Appendix A: Tables}
+\addcontentsline{toc}{section}{Appendix A: Tables}
 \begin{table}[!h] \centering 
   \caption{Logistic Regression Results (Bootstrapped Coefficients and Standard Errors)} 
   \label{} 
@@ -97,8 +94,8 @@ McFadden R$^2$ & 0.091 & & \\
 \end{table}
 
 \newpage
-# Appendix B: Project Code
-
+\section*{Appendix B: Project Code}
+\addcontentsline{toc}{section}{Appendix B: Project Code}
 ```{r l1, fig.height=5, fig.width=6, message=FALSE, warning=FALSE}
 # clear workspace
 rm(list = ls())
@@ -339,5 +336,6 @@ mean(na.omit(data$ECON)); mean(na.omit(data$MIL))
 mean(na.omit(data$death))
 ```
 
-
-# References
+\newpage
+\section*{References}
+\addcontentsline{toc}{section}{References}
