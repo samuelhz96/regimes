@@ -24,8 +24,11 @@ In this section, we give a short overview on how the model was constructed, as w
   \begin{itemize}
     \item insignificant coefficient on economists due to only 3\% of the sample being economists, and approx.\ 10\% are military members. Economists appear to have a \emph{clearer} effect compared to military, but still neither effect is significant
     \item 2Y growth, tenure, regime end (deviation from the mean end-year) seem like the largest drivers, all three have larger variations (not binary variables)
+    \item Changes from regular estimation to bootstrap:
+      \subitem highly significant effect of being a woman now (SE's changed from 723 to 0.376)! stronger effect for Economists (twice as large, but much larger standard errors), otherwise no major differences (usually only changes in the second or third decimal point)
     \item for the presentation: significance can be checked approximately by $coefficient / standard\ error \geq 2$, maybe some finance guys don't know that and I don't include stars for the significance level
     \item $\mathbb P\text{r}(\text{death}_{Hitler} = 1 \mid \mathbf x_{Hitler})=11.76\%$, so if we observe an infinite amount of Hitlers across identical universes, then only 11.76\% of them would be predicted to die during/at the end of their regimes (maybe keep this part for the presentation rather than the handout)
+      \subitem predicted probabilities based on regular estimation, not bootstrap
     \item $\mathbb P\text{r}(\text{death}_{Goebbles} = 1 \mid \mathbf x_{Goebbles})=10.86\%$
     \item still need to find 2-3 suitable candidates for calculating the predicted probabilites (maybe Pol Pot?)
   \end{itemize}
@@ -43,7 +46,7 @@ The model cannot capture a lot of the country-specific and time-specific factors
 # Appendix A: Tables
 
 \begin{table}[!h] \centering 
-  \caption{Logistic Regression Results} 
+  \caption{Logistic Regression Results (Bootstrapped Coefficients and Standard Errors)} 
   \label{} 
 \begin{tabular}{@{\extracolsep{5pt}}lc lc} 
 \\[-1.8ex]\hline 
@@ -52,27 +55,27 @@ The model cannot capture a lot of the country-specific and time-specific factors
 \cline{2-2} \cline{4-4} 
 \\[-1.8ex] & Death Dummy & & Death Dummy \\ 
 \hline \\[-1.8ex] 
- Europe Dummy & $-$1.060 &  Regime Duration & $-$0.002 \\ 
-  & (0.575) &   & (0.012) \\ 
+ Europe Dummy & $-$1.052 &  Regime Duration & $-$0.001 \\ 
+  & (0.626) &   & (0.012) \\ 
   & \\ 
- Female Dummy & $-$15.560 &  Age at Regime Entrance & 0.010 \\ 
-  & (723.003) &   & (0.014) \\  
+ Female Dummy & $-$15.502 &  Age at Regime Entrance & 0.010 \\ 
+  & (0.376) &   & (0.018) \\  
   & \\ 
- Tenure in Regime & 0.035 &  2Y GDP Growth$^1$ & $-$0.206 \\
-  & (0.014) &  & (0.055) \\
+ Tenure in Regime & 0.036 &  2Y GDP Growth$^1$ & $-$0.208 \\
+  & (0.015) &  & (0.061) \\
   & \\ 
- Economist Dummy & $-$0.433 &  Military Dummy & $-$0.157 \\ 
-  & (0.756) &   & (0.467) \\ 
+ Economist Dummy & $-$2.675 &  Military Dummy & $-$0.186 \\ 
+  & (5.511) &   & (0.560) \\ 
   & \\ 
- Regime End & 0.057 &  Constant & $-$2.073 \\
-  & (0.021) &   & (0.842) \\ 
+ Regime End & 0.059 &  Constant & $-$2.150 \\
+  & (0.024) &   & (1.025) \\ 
   & \\ 
   \hline \\[-1.8ex] 
 Observations & 721 & Log Likelihood & $-$245.020 \\ 
 McFadden R$^2$ & 0.091 & & \\ 
 \hline 
 \hline \\[-1.8ex] 
-\multicolumn{4}{l}{\textit{Note:} \vtop{\hbox{\strut Standard errors of coefficients in round brackets.}}} \\
+\multicolumn{4}{l}{\textit{Note:} \vtop{\hbox{\strut Bootstrap Standard errors of coefficients in round brackets.}}} \\
 \multicolumn{4}{l}{\quad\quad\,\,\, \vtop{\hbox{\strut $^1$Two-year GDP growth measured in the last two years of the respective regimes.}}}
 \end{tabular} 
 \end{table}
@@ -270,11 +273,33 @@ model2 <- glm(death ~ EUROPE+DURATION+ELITE_FEMALE+ELITE_ENTERAGE+ELITE_RETENURE
 summary(model2)
 pR2(model2)
 
-roc(data$death,predict.glm(model2,type='response'),plot=TRUE)
-
+# Variance Inflation Factors
 vif(model2)
 
-# get hit rate of the model with a 0.5 cutoff
+############################################
+######### BOOTSTRAP ETIMATION ##############
+############################################
+
+set.seed(1234); N <- 500
+Coeff_boot <- matrix(rep(0,N*10),ncol = 10, nrow = 500)
+for(i in 1:N){
+  boot_sample <- sample(1:n,size = n,replace = TRUE)
+  mod_boot <- glm(death ~ EUROPE+DURATION+ELITE_FEMALE+ELITE_ENTERAGE+ELITE_RETENURE
+              +EC_GR_2Y+ECON+MIL+END,
+    family = binomial(link = 'logit'), data = data[boot_sample,])
+  Coeff_boot[i,] <- mod_boot$coefficients
+}
+coeff_boot <- apply(Coeff_boot,2,mean)
+se_boot <- rep(0,10)
+for(i in 1:10){
+  se_boot[i] <- sqrt(var(Coeff_boot[,i]))
+}
+txt <- c('Intercept','EUROPE','DURATION','FEMALE','AGE','TENURE',
+         '2YGR','ECON','MIL','END')
+rbind(txt,round(coeff_boot,3),round(se_boot,3))
+
+
+# get hit rate of the model with a 0.5 cutoff (based on original model)
 cutoff <- 0.5
 # get predicted probabilities
 latent_pred <- predict.glm(model2,type = 'response')
