@@ -20,7 +20,29 @@ In this section, we give a short overview on how the model was constructed, as w
 
 # Results and Interpretation
 
-\begin{table}[!t] \centering 
+(Michaela)
+  \begin{itemize}
+    \item insignificant coefficient on economists due to only 3\% of the sample being economists, and approx.\ 10\% are military members. Economists appear to have a \emph{clearer} effect compared to military, but still neither effect is significant
+    \item 2Y growth, tenure, regime end (deviation from the mean end-year) seem like the largest drivers, all three have larger variations (not binary variables)
+    \item for the presentation: significance can be checked approximately by $coefficient / standard\ error \geq 2$, maybe some finance guys don't know that and I don't include stars for the significance level
+    \item $\mathbb P\text{r}(\text{death}_{Hitler} = 1 \mid \mathbf x_{Hitler})=11.76\%$, so if we observe an infinite amount of Hitlers across identical universes, then only 11.76\% of them would be predicted to die during/at the end of their regimes (maybe keep this part for the presentation rather than the handout)
+    \item $\mathbb P\text{r}(\text{death}_{Goebbles} = 1 \mid \mathbf x_{Goebbles})=10.86\%$
+    \item still need to find 2-3 suitable candidates for calculating the predicted probabilites (maybe Pol Pot?)
+  \end{itemize}
+(Katrin and Dominik)
+
+# Model Diagnostics and Issues
+
+None of the coefficients exhibit a VIF value that seems to lead to any larger concerns, using a critical value of 10 on the determination for problematic imperfect multicollinearity. Some of the standards appear quite large, this is, at least partly, due to the VIFs, as indicated in Table 2 of Appendix A. As is denoted in Table 1, the McFadden R$^2$ is 0.091, so the model appears to have some explanatory power. To put this in further context, the hit-rate of the model, using a cutoff value of 0.5, is 88.07\%, compared to a hit-rate of 87.66\% when simply guessing the most likely outcome of not dying. One issue with such a model is, per definition, that external validity is not given, as we pre-select for being part of an authoritarian regime. Furthermore, the inclusion of variables specific for the regime, such as the duration, don't allow for out-of-sample validation methods, only allowing for validation and calibration based on random sub-samples of this particular dataset. 
+
+# Conclusion
+
+The model cannot capture a lot of the country-specific and time-specific factors which drive the unobserved dependent variable, at least given the data available. Thus, we are somewhat limited in the conclusions we are able to draw from this model. However, within this model, the first of three main drivers of the variation of the death probability, the economic growth rates immediately before the regime falls, which negatively influences the unobserved outcome variable. Secondly, the year in which the regime fell, which has a positive sign on the coefficient, and lastly the tenure of the individual member in their respective regime, which also has a positive coefficient.
+\newpage
+
+# Appendix A: Tables
+
+\begin{table}[!h] \centering 
   \caption{Logistic Regression Results} 
   \label{} 
 \begin{tabular}{@{\extracolsep{5pt}}lc lc} 
@@ -55,33 +77,24 @@ McFadden R$^2$ & 0.091 & & \\
 \end{tabular} 
 \end{table}
 
+\begin{table}[!h] \centering 
+  \caption{Variance Inflation Factors} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc lc lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ Europe Dummy & 3.54 &  Regime Duration & 3.97 & Female Dummy & 1.00 \\ 
+  & \\ 
+ Age at Regime Entrance & 1.22 &  Tenure in Regime & 1.15 & 2Y GDP Growth & 4.19 \\ 
+  & \\ 
+ Economist Dummy & 1.01 &  Military Dummy & 1.39 & Regime End & 8.01 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}
 
-
-(Michaela)
-  \begin{itemize}
-    \item insignificant coefficient on economists due to only 3\% of the sample being economists, and approx.\ 10\% are military members. Economists appear to have a \emph{clearer} effect compared to military, but still neither effect is significant
-    \item 2Y growth, tenure, regime end (deviation from the mean end-year) seem like the largest drivers, all three have larger variations (not binary variables)
-    \item for the presentation: significance can be checked approximately by $coefficient / standard\ error \geq 2$, maybe some finance guys don't know that and I don't include stars for the significance level
-    \item $\mathbb P\text{r}(\text{death}_{Hitler} = 1 \mid \mathbf x_{Hitler})=11.76\%$, so if we observe an infinite amount of Hitlers across identical universes, then only 11.76\% of them would be predicted to die during/at the end of their regimes (maybe keep this part for the presentation rather than the handout)
-    \item $\mathbb P\text{r}(\text{death}_{Goebbles} = 1 \mid \mathbf x_{Goebbles})=10.86\%$
-    \item still need to find 2-3 suitable candidates for calculating the predicted probabilites (maybe Pol Pot?)
-  \end{itemize}
-(Katrin and Dominik)
-
-# Model Diagnostics and Issues
-
-Correlation between the variables leads to inflated standard errors on the respective coefficients, this multiplicative term on the standard errors is the VIF, where the variances are now defined by
-  \begin{align*}
-  \sigma^2_{\hat{\beta}_i} = n^{-1} \left[ \frac{1}{1-\rho^2_{\mathbf X_i,\mathbf X_j}} \right] \frac{\sigma_{\epsilon}^2}{\sigma_{\mathbf X_i}^2}.
-  \end{align*}
-None of the coefficients exhibit a VIF value that seems to lead to any larger concerns, using a critical value of 10 on the determination for problematic imperfect multicollinearity. However, any factor larger than one may be an issue in weak models, such as is the case here. As is denoted in Table 1, the McFadden R$^2$ is 0.091, so the model appears to have some explanatory power. To put this in further context, the hit-rate of the model, using a cutoff value of 0.5, is 88.07\%, compared to a hit-rate of 87.66\% when simply guessing the most likely outcome of not dying. One issue with such a model is, per definition, that external validity is not given, as we pre-select for being part of an authoritarian regime. Furthermore, the inclusion of variables specific for the regime, such as the duration, don't allow for out-of-sample validation methods, only allowing for validation and calibration based on random sub-samples of this particular dataset. 
-
-# Conclusion
-
-The model cannot capture a lot of the country-specific and time-specific factors which drive the unobserved dependent variable, at least given the data available. Thus, we are somewhat limited in the conclusions we are able to draw from this model. However, within this model, the first of three main drivers of the variation of the death probability, the economic growth rates immediately before the regime falls, which negatively influences the unobserved outcome variable. Secondly, the year in which the regime fell, which has a positive sign on the coefficient, and lastly the tenure of the individual member in their respective regime, which also has a positive coefficient.
 \newpage
-
-# Project Code
+# Appendix B: Project Code
 
 ```{r l1, fig.height=5, fig.width=6, message=FALSE, warning=FALSE}
 # clear workspace
