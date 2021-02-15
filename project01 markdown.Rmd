@@ -23,7 +23,12 @@ Despite all differences: What unifies them is the exertion of violence to stay i
 In this section, we give a short overview on how the model was constructed, as well as brief justifications as to why some variables are included. The variable selection is based on variables of interest, rather than trying to maximize the predictive power of the model. The dummy for the country in which the regime is, or was, located. There might be cultural reasons why countries in Latin America or Asia might differ from countries in Europe. Furthermore, the duration of the regime is included, as it might be the case that regimes that have been in power for longer have an increasing effect on the probability of death for its members, simply due to being longer in power giving more chances to die, either natural or not. Related to this, the demeaned end year of the regime is included, as the possibility of time trends seems plausible. E.g.\ when regimes were overturned 100 years ago, the population might have been less averse to peaceful transitions. An earlier version of this model included the start year, however, the variance inflation factor (VIF) on the coefficient was relatively large, compared to the others, so it was excluded from the model. End-of-regime two-year average GDP growth is included, as a worse economic situation might lead to a more desperate population, which in turn might lead to increased propensity of a more violent approach to overturning the current regime. Lastly, all other variables are included simply out of interest, not due to an assumption on the sign and size of the partial correlations with the outcome variable. 
 
 \section{Results and Interpretation}
-(Michaela)
+As Table 1 shows, quite a lot of coefficients are not statistically significant. Ignoring this for a moment, there is a positive relationship between death during, or at the end of the regime and tenure in regime. The same is observed for regime end: with higher deviation from the mean end year of regime, the log-odds of death increases. The opposite effects are observed for female and GDP growth. Being female decreases the log-odds of death during, or at the end of the regime. Higher GDP growth in the country also decreases the log-odds of death. Even though other variables are insignificant, we can still look at their coefficient signs. Being part of the regime in a European country decreases the log-odds of death. The same applies for economists or individuals who were previously military members. The insignificance may stem from the small sample size. 
+
+Log-odds can show us relationships between the dependent and independent variables, whereas it is preferable to also use odds and marginal effects to understand the coefficients better.
+The odds for death are 1,036 times higher when tenure increases by one unit, keeping other variables constant. In other words, the odds for death increase by 3.6\% with one year increase. For a one unit increase in the GDP growth in the last 2 years of the regime we expect to see almost 19% decrease in the odds of dying during the regime, i.e. the chance of NOT dying is higher for members whose countries experienced a GDP growth (odds are 0.814; not sure if I should include intercept). The later the regime ended, the higher are the odds of dying during/at the end of the regime (1,058 maybe because many of them ended later?). Even though it is insignificant, being part of a regime in Europe decreases the average probability of death by 10.7 percentage points.
+
+Ill look through the second paragraph later.
   \begin{itemize}
     \item insignificant coefficient on economists due to only 3\% of the sample being economists, and approx.\ 10\% are military members. Economists appear to have a \emph{clearer} effect compared to military, but still neither effect is significant
     \item 2Y growth, tenure, regime end (deviation from the mean end-year) seem like the largest drivers, all three have larger variations (not binary variables)
@@ -107,7 +112,7 @@ library(readr)
 library(pscl)
 library(car)
 library(pROC)
-library(stargazer)
+library(margins)
 
 # read dataset
 data <- read_csv("C:/Users/samue/Downloads/Studium/Economics (Master - Vienna)/1. Semester/Microeconometrics/Project/Overview.csv")
@@ -336,6 +341,13 @@ latent_bin[13]==data$death[13]
 mean(na.omit(data$ECON)); mean(na.omit(data$MIL))
 
 mean(na.omit(data$death))
+
+# average marginal effects
+mar <- margins(model2)
+summary(mar)
+mean(na.omit(data$ELITE_FEMALE))
+mean(na.omit(data$death[na.omit(data$ELITE_FEMALE) == 1]))
+# turns out no women died
 ```
 
 \newpage
