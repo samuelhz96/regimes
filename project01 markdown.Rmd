@@ -1,6 +1,6 @@
 ---
-title: "From Cambodia to the Soviet Union: What Factors Influence the Probability of Death for Members of Authoritarian Regimes?"
-author: "Katrin Aug, Leonhard Gruber, Samuel Hashem Zehi, Michaela Preclikova, Dominik Ruso"
+title: "From Cambodia to the Soviet Union: What Factors Influence the Probability of Death for Members of Totalitarian Regimes?"
+author: "Katrin Aug, Leonhard Gruber, Samuel Hashem Zehi, Michaela Preclíková, Dominik Ruso"
 date: "12/02/2021"
 output: 
   pdf_document:
@@ -26,21 +26,9 @@ In this section, we give a short overview on how the model was constructed, as w
 As Table 1 shows, quite a lot of coefficients are not statistically significant. Ignoring this for a moment, there is a positive relationship between death during, or at the end of the regime and tenure in regime. The same is observed for regime end: with higher deviation from the mean end year of regime, the log-odds of death increases. The opposite effects are observed for female and GDP growth. Being female decreases the log-odds of death during, or at the end of the regime. Higher GDP growth in the country also decreases the log-odds of death. Even though other variables are insignificant, we can still look at their coefficient signs. Being part of the regime in a European country decreases the log-odds of death. The same applies for economists or individuals who were previously military members. The insignificance may stem from the small sample size. 
 
 Log-odds can show us relationships between the dependent and independent variables, whereas it is preferable to also use odds and marginal effects to understand the coefficients better.
-The odds for death are 1,036 times higher when tenure increases by one unit, keeping other variables constant. In other words, the odds for death increase by 3.6\% with one year increase. For a one unit increase in the GDP growth in the last 2 years of the regime we expect to see almost 19% decrease in the odds of dying during the regime, i.e. the chance of NOT dying is higher for members whose countries experienced a GDP growth (odds are 0.814; not sure if I should include intercept). The later the regime ended, the higher are the odds of dying during/at the end of the regime (1,058 maybe because many of them ended later?). Even though it is insignificant, being part of a regime in Europe decreases the average probability of death by 10.7 percentage points.
+The odds for death are 1.036 times higher when tenure increases by one unit, keeping other variables constant. In other words, the odds for death increase by 3.6\% with one year increase. For a one unit increase in the GDP growth in the last 2 years of the regime we expect to see almost 19% decrease in the odds of dying during the regime, i.e. the chance of not dying is higher for members whose countries experienced a GDP growth. The later the regime ended, compared to the average end year of all included regimes, the higher are the odds of dying during, or at the end of the regime. Even though it is insignificant, being part of a regime in Europe decreases the average probability of death by 10.7 percentage points.
 
-Ill look through the second paragraph later.
-  \begin{itemize}
-    \item insignificant coefficient on economists due to only 3\% of the sample being economists, and approx.\ 10\% are military members. Economists appear to have a \emph{clearer} effect compared to military, but still neither effect is significant
-    \item 2Y growth, tenure, regime end (deviation from the mean end-year) seem like the largest drivers, all three have larger variations (not binary variables)
-    \item Changes from regular estimation to bootstrap:
-      \subitem highly significant effect of being a woman now (SE's changed from 723 to 0.376)! stronger effect for Economists (twice as large, but much larger standard errors), otherwise no major differences (usually only changes in the second or third decimal point)
-    \item for the presentation: significance can be checked approximately by $coefficient / standard\ error \geq 2$, maybe some finance guys don't know that and I don't include stars for the significance level
-    \item $\mathbb P\text{r}(\text{death}_{Hitler} = 1 \mid \mathbf x_{Hitler})=11.76\%$, so if we observe an infinite amount of Hitlers across identical universes, then only 11.76\% of them would be predicted to die during/at the end of their regimes (maybe keep this part for the presentation rather than the handout)
-      \subitem predicted probabilities based on regular estimation, not bootstrap
-    \item $\mathbb P\text{r}(\text{death}_{Goebbles} = 1 \mid \mathbf x_{Goebbles})=10.86\%$
-    \item still need to find 2-3 suitable candidates for calculating the predicted probabilites (maybe Pol Pot?)
-  \end{itemize}
-(Katrin and Dominik)
+As some examples of what the model would predict, we chose four well known personalities from totalitarian regimes. We start with two members of the NSDAP in Germany. Firstly, Adolf Hitler, who was leading the german regime throughout its entire existence, having a predicted probability to die of 10.44\%. The second member is Ernst Röhm, the co-founder of the \emph{Sturmabteilung}, and early friend of Adolf Hitler. His predicted probability of dying is lower, sitting at only 7.27\%. A fierce rival, at least through some part of the regime, of the German regime was the Soviet Union, and with it its leader Joseph Stalin. Stalin managed to hang on to power for quite a long time, thus having a higher probability of dying. Additionally, the economic growth of the Soviet Union in the years before its collapse was quite grim, also driving up the death probability, all in all, his predicted value is at 32.27\%. However, it should be noted that his death came some time before the fall of the regime, so his influence on the economic situation was quite limited. As a last example, we chose Pol Pot, who governed Cambodia for four years. Him not being from Europe, combined with negative GDP growth leads to a predicted probability of 31.76\%. Noteworthy here is, that Pol Pot did not die in any way related to his regime, but rather died of a heart attack before any punishment for his actions was undertaken. So, while his predicted probability is quite high, at least compared to the generally very low predicted probabilities, the model does not correctly classify him when choosing a cutoff at 50\%. 
 \section{Model Diagnostics and Issues}
 None of the coefficients exhibit a VIF value that seems to lead to any larger concerns, using a critical value of 10 on the determination for problematic imperfect multicollinearity. Some of the standards appear quite large, this is, at least partly, due to the VIFs, as indicated in Table 2 of Appendix A. As is denoted in Table 1, the McFadden R$^2$ is 0.091, so the model appears to have some explanatory power. To put this in further context, the hit-rate of the model, using a cutoff value of 0.5, is 88.07\%, compared to a hit-rate of 87.66\% when simply guessing the most likely outcome of not dying. One issue with such a model is, per definition, that external validity is not given, as we pre-select for being part of an authoritarian regime. Furthermore, the inclusion of variables specific for the regime, such as the duration, don't allow for out-of-sample validation methods, only allowing for validation and calibration based on random sub-samples of this particular dataset. 
 \section{Conclusion}
@@ -156,9 +144,9 @@ table(death)
 EUROPE <- rep(0,n)
 for(i in 1:n){
   EUROPE[i] <- ifelse(data$STATE[i] == 'Germany' || data$STATE[i] == 'Poland'
-                   || data$STATE[i] == 'East Germany' || data$STATE[i] == 'Hungary'
-                   || data$STATE[i] == 'Norway' || data$STATE[i] == 'Romania'
-                   || data$STATE[i] == 'Soviet Union',1,0)
+                      || data$STATE[i] == 'East Germany' || data$STATE[i] == 'Hungary'
+                      || data$STATE[i] == 'Norway' || data$STATE[i] == 'Romania'
+                      || data$STATE[i] == 'Soviet Union',1,0)
 }
 table(EUROPE)
 
@@ -226,33 +214,39 @@ ELITE_RETENURE <- as.numeric(data$ELITE_RETENURE)
 EC_GR_2Y <- as.numeric(data$EC_GR_2Y)
 
 # create dataset only based on relevant variables
-data0 <- cbind(data$ELITE_NAME,death,EUROPE,START,DURATION,ELITE_FEMALE,
+data0 <- cbind(data$ELITE_NAME,data$STATE,death,EUROPE,START,DURATION,ELITE_FEMALE,
                ELITE_ENTERAGE,ELITE_RETENURE,EC_GR_2Y,ECON,MIL,END)
 data <- cbind(death,EUROPE,START,DURATION,ELITE_FEMALE,ELITE_ENTERAGE,
               ELITE_RETENURE,EC_GR_2Y,ECON,MIL,END)
 
-# get vectors for specific people:
-hitler <- c(1,data[21,-c(1,3)])
-# check if person is correct
-data0[21,8] == data[21,7]
 
-goebbles <- c(1,data[13,-c(1,3)])
-
-# check dimenstion for later calculations
-length(hitler)
-t(rep(1,length(hitler)))%*%hitler
 
 
 
 data <- as.data.frame(data)
 data0 <- as.data.frame(data0)
-data0 <- na.exclude(data0)
 #View(data0)
+
+# get vectors for specific people:
+hitler <- type.convert(unlist(c(1,data0[21,-c(1:3,5)]),use.names = FALSE),dec='.')
+# check if person is correct
+data0[21,9] == data[21,7]
+
+# Röhm:
+roehm <- type.convert(unlist(c(1,data0[35,-c(1:3,5)]),use.names = FALSE),dec='.')
+# Stalin:
+stalin <- type.convert(unlist(c(1,data0[799,-c(1:3,5)]),use.names = FALSE),dec='.')
+# Pol Pot
+pol_pot <- type.convert(unlist(c(1,data0[223,-c(1:3,5)]),use.names = FALSE),dec='.')
 
 # remove NAs
 data <- na.exclude(data)
+data0 <- na.exclude(data0)
 
+
+#View(data0)
 #View(data)
+
 
 
 # logit model
@@ -327,15 +321,18 @@ length(model2$coefficients);length(hitler)
 hitler
 model2$coefficients
 # get probabilities
-Pr_hitler <- 1/(1+exp(-t(model2$coefficients)%*%(hitler)))
+coeff_boot <- type.convert(coeff_boot,dec = '.')
+Pr_hitler <- 1/(1+exp(-t(coeff_boot)%*%(hitler)))
 Pr_hitler
-Pr_goebbles <- 1/(1+exp(-t(model2$coefficients)%*%(goebbles)))
-Pr_goebbles
-# verify that the model would predict wrongly
-latent_bin[21]==data$death[21]
-latent_bin[13]==data$death[13]
-# Get the predicted probabilities for Hitler, Goebbels, someone from 
-# SE Asia (no external war), Stalin (communist).
+Pr_pol_pot <- 1/(1+exp(-t(coeff_boot)%*%(pol_pot)))
+Pr_pol_pot
+Pr_roehm <- 1/(1+exp(-t(coeff_boot)%*%(roehm)))
+Pr_roehm
+Pr_stalin <- 1/(1+exp(-t(coeff_boot)%*%(stalin)))
+Pr_stalin
+
+
+
 
 # check for percentage of economists and military
 mean(na.omit(data$ECON)); mean(na.omit(data$MIL))

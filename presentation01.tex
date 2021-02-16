@@ -1,0 +1,168 @@
+\documentclass{beamer}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  % or ...
+ \useoutertheme{infolines}
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage[backend=bibtex, style=authoryear, uniquename=init, giveninits=true, maxbibnames=3, minbibnames=2]{biblatex} 
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{adjustbox}
+\usepackage{subfigure}
+\usepackage{booktabs}
+\usepackage{bm}
+\usepackage{scalerel,stackengine}
+\newcommand*\diff{\mathop{}\!\mathrm{d}} %Integral d
+\newcommand\equalhat{\mathrel{\stackon[1.5pt]{=}{\stretchto{%
+    \scalerel*[\widthof{=}]{\wedge}{\rule{1ex}{3ex}}}{0.5ex}}}}
+\renewcommand*{\bibfont}{\tiny}
+\bibliography{bibs}
+
+\title{From Cambodia to the Soviet Union:}
+
+\subtitle
+{What Factors Influence the Probability of Death for Members of Totalitarian Regimes?} % (optional)
+
+\author[ ]{Katrin Aug, Leonhard Gruber, Samuel Hashem Zehi, Michaela Preclíková, Dominik Ruso}
+
+\date{18.02.2021}
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+\section{Specification and Estimation}
+\begin{frame}{Model Specification}
+	\begin{itemize}
+	\item Main dataset from \cite{Matthews.2019}
+	\item Dummy variables:
+		\begin{itemize}
+		\item Europe, female, military occupation (pre-regime), economist (pre-regime) 
+		\end{itemize}
+	\item Continuous variables:	
+		\begin{itemize}
+		\item regime duration, age at regime entrance, tenure inside regime, regime end year (demeaned), two-year average GDP growth (before end of regime)
+		\end{itemize}
+	\item Using $\mathbf x_i$ being the independent variable vector including coefficient for the i$^{th}$ observation:	
+	\begin{align*}
+	\mathbb P\text{r}[\text{death}_i = 1 \mid \mathbf x_i] = \frac{1}{1+\exp[-\mathbf x_i^\prime \bm\beta]}
+	\end{align*}	
+	\end{itemize}
+\end{frame}
+\section{Empirical Results}
+\begin{frame}{Logistic Regression Results}
+\begin{table}[!h] \centering 
+\begin{adjustbox}{width=0.9\textwidth}
+\begin{tabular}{@{\extracolsep{5pt}}lc lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} &  & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} \cline{4-4} 
+\\[-1.8ex] & Death Dummy & & Death Dummy \\ 
+\hline \\[-1.8ex] 
+ Europe Dummy & $-$1.052 &  Regime Duration & $-$0.001 \\ 
+  & (0.626) &   & (0.012) \\ 
+  &&& \\ 
+ Female Dummy & $-$15.502 &  Age at Regime Entrance & 0.010 \\ 
+  & (0.376) &   & (0.018) \\  
+  &&& \\ 
+ Tenure in Regime & 0.036 &  2Y GDP Growth$^1$ & $-$0.208 \\
+  & (0.015) &  & (0.061) \\
+  &&& \\ 
+ Economist Dummy & $-$2.675 &  Military Dummy & $-$0.186 \\ 
+  & (5.511) &   & (0.560) \\ 
+  &&& \\ 
+ Regime End & 0.059 &  Constant & $-$2.150 \\
+  & (0.024) &   & (1.025) \\ 
+  &&& \\ 
+  \hline \\[-1.8ex] 
+Observations & 721 & Log Likelihood & $-$245.020 \\ 
+McFadden R$^2$ & 0.091 & & \\ 
+\hline 
+\hline \\[-1.8ex] 
+\multicolumn{4}{l}{\textit{Note:} \vtop{\hbox{\strut Bootstrap standard errors of coefficients in round brackets.}}} \\
+\multicolumn{4}{l}{\quad\quad\,\,\, \vtop{\hbox{\strut $^1$Two-year GDP growth measured in the last two years of the respective regimes.}}}
+\end{tabular} 
+\end{adjustbox}
+\end{table}
+\end{frame}
+\section{Diagnostics}
+\begin{frame}{Diagnostics}
+	\begin{itemize}
+	\item Variance Inflation Factor:
+		\begin{align*}
+		\hat{\sigma}^2_{\hat{\beta}_j} = n^{-1} \left[ \frac{1}{1-R_j^2} \right]\frac{\hat\sigma^2_\epsilon}{\hat\sigma^2_{\mathbf X_j}}
+		\end{align*}
+	\end{itemize}
+\begin{table}[!h] \centering 
+\begin{adjustbox}{width=0.9\textwidth}
+\begin{tabular}{@{\extracolsep{5pt}}lc lc lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ Europe Dummy & 3.54 &  Regime Duration & 3.97 & Female Dummy & 1.00 \\ 
+  &&& \\ 
+ Age at Regime Entrance & 1.22 &  Tenure in Regime & 1.15 & 2Y GDP Growth & 4.19 \\ 
+  &&& \\ 
+ Economist Dummy & 1.01 &  Military Dummy & 1.39 & Regime End & 8.01 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{adjustbox}
+\end{table}	
+\end{frame}
+\begin{frame}{Bootstrap}
+	\begin{itemize}
+	\item Often used to remove bias from estimators
+		\begin{itemize}
+		\item here: estimate SE's and coefficient vector
+		\end{itemize}
+	\item Draw $N$ times a sample of size $n$ from the original sample with replacement
+	\item Estimate the model separately for all $N$ samples
+	\item Empirical bootstrap estimator is then the mean of the respectively estimated coefficient vectors
+	\item Equivalently: standard errors from the $N$ estimations per coefficient
+	\item No noteworthy differences to standard logit model results except the SE on the dummy for women
+	\end{itemize}
+\end{frame}
+\section{Conclusion}
+\begin{frame}{Conclusion}
+	\begin{itemize}
+	\item Model performance could be better
+		\begin{itemize}
+		\item data availability is an issue
+		\end{itemize}
+	\item Few variables appear to drive most of the marginal effects
+	\item Examples:
+		\begin{itemize}
+		\item $\mathbb P\text{r}[\text{death}_{\text{Hitler}} = 1 \mid \mathbf x_{\text{Hitler}}]=10.44\%$
+		\item $\mathbb P\text{r}[\text{death}_{\text{Röhm}} = 1 \mid \mathbf x_{\text{Röhm}}]=7.27\%$
+		\item $\mathbb P\text{r}[\text{death}_{\text{Pol Pot}} = 1 \mid \mathbf x_{\text{Pol Pot}}]=31.76\%$
+		\item $\mathbb P\text{r}[\text{death}_{\text{Stalin}} = 1 \mid \mathbf x_{\text{Stalin}}]=32.27\%$
+		\end{itemize}
+	\item Good news for female economists from Europe who aspire to be part of a totalitarian regime
+		\begin{itemize}
+		\item model predicts that you are very unlikely to die
+		\end{itemize}
+	\end{itemize}
+\nocite{Matthews.2019} \nocite{Abarca.2018} \nocite{Basu.2005} \nocite{Harrison.1998} \nocite{Matthews.2018} \nocite{UnitedNations.1989} \nocite{spechlet.1985} \nocite{markevich.harrison.2011} \nocite{Bolt.2020}	
+\end{frame}
+\begin{frame}{References}
+	\printbibliography
+\end{frame}
+\end{document}
